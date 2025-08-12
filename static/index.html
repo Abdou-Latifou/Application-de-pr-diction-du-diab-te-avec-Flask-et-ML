@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prédiction du Diabète - IA Médicale</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">DiabèteIA</div>
+            <ul>
+                <li><a href="#prediction" class="active">Prédiction</a></li>
+                <li><a href="#stats">Statistiques</a></li>
+                <li><a href="#about">À propos</a></li>
+            </ul>
+        </nav>
+        <div class="hero">
+            <h1>Prédiction du Diabète par Intelligence Artificielle</h1>
+            <p>Utilisez notre modèle de machine learning avancé basé sur Random Forest pour évaluer votre risque de diabète en quelques secondes.</p>
+            <div class="stats-overview">
+                <div>
+                    <span id="total-predictions">0</span>
+                    <p>PRÉDICTIONS</p>
+                </div>
+                <div>
+                    <span id="model-accuracy">0%</span>
+                    <p>PRÉCISION</p>
+                </div>
+                <div>
+                    <span id="feature-count">8</span>
+                    <p>FACTEURS</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="prediction" class="card">
+            <h2>Évaluation du Risque</h2>
+            <p>Remplissez le formulaire ci-dessous pour obtenir une évaluation personnalisée</p>
+            <form id="diabetes-form">
+                <div class="form-group">
+                    <label for="gender">Genre</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Sélectionnez votre genre</option>
+                        <option value="Male">Homme</option>
+                        <option value="Female">Femme</option>
+                        <option value="Other">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">Âge</label>
+                    <input type="number" id="age" name="age" placeholder="Ex: 45" required>
+                </div>
+                <div class="form-group">
+                    <label for="bmi">IMC (kg/m²)</label>
+                    <input type="number" step="0.01" id="bmi" name="bmi" placeholder="Ex: 25.5" required>
+                </div>
+                <div class="form-group">
+                    <label for="smoking_history">Historique de tabagisme</label>
+                    <select id="smoking_history" name="smoking_history" required>
+                        <option value="">Sélectionnez votre historique</option>
+                        <option value="never">Jamais fumé</option>
+                        <option value="former">Ancien fumeur</option>
+                        <option value="current">Fumeur actuel</option>
+                        <option value="No Info">Pas d'information</option>
+                        <option value="ever">A déjà fumé</option>
+                        <option value="not current">N'est plus fumeur actuel</option>
+                    </select>
+                </div>
+                <div class="form-group radio-group">
+                    <label>Hypertension</label>
+                    <div>
+                        <input type="radio" id="hypertension_no" name="hypertension" value="0" required checked>
+                        <label for="hypertension_no">Non</label>
+                        <input type="radio" id="hypertension_yes" name="hypertension" value="1">
+                        <label for="hypertension_yes">Oui</label>
+                    </div>
+                </div>
+                <div class="form-group radio-group">
+                    <label>Maladie cardiaque</label>
+                    <div>
+                        <input type="radio" id="heart_disease_no" name="heart_disease" value="0" required checked>
+                        <label for="heart_disease_no">Non</label>
+                        <input type="radio" id="heart_disease_yes" name="heart_disease" value="1">
+                        <label for="heart_disease_yes">Oui</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="HbA1c_level">Niveau HbA1c (%)</label>
+                    <input type="number" step="0.01" id="HbA1c_level" name="HbA1c_level" placeholder="Ex: 6.5" required>
+                </div>
+                <div class="form-group">
+                    <label for="blood_glucose_level">Glucose sanguin (mg/dL)</label>
+                    <input type="number" id="blood_glucose_level" name="blood_glucose_level" placeholder="Ex: 120" required>
+                </div>
+                <button type="submit" class="btn"><i class="fas fa-flask"></i> Analyser le Risque</button>
+            </form>
+            <div id="prediction-result" class="result-box" style="display: none;">
+                <h3>Résultat de la Prédiction :</h3>
+                <p id="result-text"></p>
+                <p id="result-probability"></p>
+            </div>
+            <div id="error-message" class="error-box" style="display: none;">
+                <h3>Erreur :</h3>
+                <p id="error-text"></p>
+            </div>
+        </section>
+
+        <section id="stats" class="card">
+            <h2>Statistiques du Modèle</h2>
+            <p>Performances et importance des facteurs de risque</p>
+            <div class="stats-content">
+                <div class="general-stats">
+                    <h3>Statistiques Générales</h3>
+                    <p>Prédictions totales: <span id="stats-total">0</span></p>
+                    <p>Prédictions positives (diabète): <span id="stats-positive">0</span></p>
+                    <p>Prédictions négatives (non-diabète): <span id="stats-negative">0</span></p>
+                </div>
+                <div class="feature-importance">
+                    <h3>Importance des Facteurs</h3>
+                    <ul id="feature-importance-list">
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="card">
+            <h2>À propos de DiabèteIA</h2>
+            <p>DiabèteIA est une application de prédiction du risque de diabète basée sur un modèle de machine learning Random Forest. Notre objectif est de fournir une estimation rapide et fiable du risque de diabète en utilisant des données de santé clés.</p>
+            <p>Le modèle a été entraîné sur un ensemble de données diversifié et évalue l'importance de chaque facteur pour la prédiction. Bien que cette application puisse être un outil utile pour la sensibilisation, elle ne remplace en aucun cas un avis médical professionnel. Consultez toujours un professionnel de la santé pour un diagnostic et un traitement.</p>
+            <h3>Technologies Utilisées :</h3>
+            <ul>
+                <li><strong>Backend:</strong> Flask (Python)</li>
+                <li><strong>Machine Learning:</strong> Scikit-learn (Random Forest), Pandas, Joblib</li>
+                <li><strong>Base de données:</strong> SQLite (via SQLAlchemy)</li>
+                <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (Fetch API)</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 DiabèteIA. Tous droits réservés.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>
